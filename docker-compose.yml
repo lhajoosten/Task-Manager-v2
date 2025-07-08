@@ -1,0 +1,28 @@
+services:
+  frontend:
+    container_name: taskmanager-client
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "6000:80"        # HTTP
+      - "6443:443"       # HTTPS
+    networks:
+      - internal_network
+
+  backend:
+    container_name: taskmanager-api
+    build:
+      context: ./server
+      dockerfile: TaskManager.Api/Dockerfile
+    ports:
+      - "5000:8080"    # HTTP
+      - "5443:8443"    # HTTPS
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - internal_network
+
+networks:
+  internal_network:
+    driver: bridge
