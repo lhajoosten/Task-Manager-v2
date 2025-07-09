@@ -4,5 +4,5 @@ namespace TaskManager.Domain.Events;
 
 public interface IDomainEvent : INotification
 {
-	DateTime OccurredOn { get; }
+    DateTime OccurredOn { get; }
 }

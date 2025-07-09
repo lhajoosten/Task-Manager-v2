@@ -5,15 +5,15 @@ namespace TaskManager.Domain.Events.Tasks;
 
 public class TaskAssignedEvent : IDomainEvent
 {
-	public TaskItem Task { get; }
-	public UserId PreviousAssignedTo { get; }
-	public UserId NewAssignedTo { get; }
-	public DateTime OccurredOn { get; } = DateTime.UtcNow;
+    public TaskItem Task { get; }
+    public UserId PreviousAssignedTo { get; }
+    public UserId NewAssignedTo { get; }
+    public DateTime OccurredOn { get; } = DateTime.UtcNow;
 
-	public TaskAssignedEvent(TaskItem task, UserId previousAssignedTo, UserId newAssignedTo)
-	{
-		Task = task;
-		PreviousAssignedTo = previousAssignedTo;
-		NewAssignedTo = newAssignedTo;
-	}
+    public TaskAssignedEvent(TaskItem task, UserId previousAssignedTo, UserId newAssignedTo)
+    {
+        Task = task;
+        PreviousAssignedTo = previousAssignedTo;
+        NewAssignedTo = newAssignedTo;
+    }
 }

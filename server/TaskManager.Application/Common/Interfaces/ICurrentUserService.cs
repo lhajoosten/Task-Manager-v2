@@ -4,6 +4,6 @@ namespace TaskManager.Application.Common.Interfaces;
 
 public interface ICurrentUserService
 {
-	UserId? GetCurrentUserId();
-	bool IsAuthenticated { get; }
+    UserId? GetCurrentUserId();
+    bool IsAuthenticated { get; }
 }

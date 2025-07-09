@@ -4,11 +4,11 @@ namespace TaskManager.Domain.Events.Users;
 
 public class UserDeletedEvent : IDomainEvent
 {
-	public User User { get; }
-	public DateTime OccurredOn { get; } = DateTime.UtcNow;
+    public User User { get; }
+    public DateTime OccurredOn { get; } = DateTime.UtcNow;
 
-	public UserDeletedEvent(User user)
-	{
-		User = user;
-	}
+    public UserDeletedEvent(User user)
+    {
+        User = user;
+    }
 }
