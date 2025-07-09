@@ -122,18 +122,4 @@ public class AuthController : ControllerBase
 
 		return Ok(result);
 	}
-
-	/// <summary>
-	/// Logout user (client-side token removal)
-	/// </summary>
-	[HttpPost("logout")]
-	[Authorize]
-	[SwaggerOperation(Summary = "Logout user", Description = "Logs out the current user (client should remove token)")]
-	[SwaggerResponse(200, "Logout successful")]
-	public ActionResult Logout()
-	{
-		// With JWT, logout is typically handled client-side by removing the token
-		// You could implement token blacklisting here if needed
-		return Ok(new { message = "Logout successful" });
-	}
 }
