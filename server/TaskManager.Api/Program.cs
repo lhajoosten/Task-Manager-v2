@@ -1,8 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
-
 using TaskManager.Api.Configurations;
 using TaskManager.Api.Extensions;
 using TaskManager.Api.Middleware;
@@ -43,7 +41,15 @@ public class Program
         X509Certificate2 certificate;
         try
         {
-            certificate = X509Certificate2.CreateFromPemFile("/https/localhost.crt", "/https/localhost.key");
+            var certificatePath = Environment.GetEnvironmentVariable("CERTIFICATE_PATH");
+            var certificateKeyPath = Environment.GetEnvironmentVariable("CERTIFICATE_KEYPATH");
+
+            if (string.IsNullOrEmpty(certificatePath) || string.IsNullOrEmpty(certificateKeyPath))
+            {
+                throw new InvalidOperationException("Certificate paths are not set in environment variables.");
+            }
+
+            certificate = X509Certificate2.CreateFromPemFile(certificatePath, certificateKeyPath);
         }
         catch (Exception ex)
         {
