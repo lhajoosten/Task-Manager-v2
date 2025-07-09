@@ -17,8 +17,8 @@ public static class SwaggerConfiguration
                 Description = "A modern task management API built with Clean Architecture, CQRS, and DDD patterns",
                 Contact = new OpenApiContact
                 {
-                    Name = "TaskManager Team",
-                    Email = "support@taskmanager.com"
+                    Name = "Luc Joosten",
+                    Email = "lhajoosten@outlook.com"
                 }
             });
 

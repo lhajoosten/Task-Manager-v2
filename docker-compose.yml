@@ -1,28 +1,42 @@
 services:
-  frontend:
-    container_name: taskmanager-client
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "6000:80"        # HTTP
-      - "6443:443"       # HTTPS
-    networks:
-      - internal_network
+    frontend:
+        container_name: taskmanager-client
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "6000:80" # HTTP
+            - "6443:443" # HTTPS
+        networks:
+            - internal_network
 
-  backend:
-    container_name: taskmanager-api
-    build:
-      context: ./server
-      dockerfile: TaskManager.Api/Dockerfile
-    ports:
-      - "5000:8080"    # HTTP
-      - "5443:8443"    # HTTPS
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    networks:
-      - internal_network
+    backend:
+        container_name: taskmanager-api
+        build:
+            context: ./server
+            dockerfile: TaskManager.Api/Dockerfile
+        ports:
+            - "5000:8080" # HTTP
+            - "5443:8443" # HTTPS
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskManagerV2Development;User=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+        depends_on:
+            - sqlserver
+        networks:
+            - internal_network
+
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        container_name: sqlserver
+        environment:
+            SA_PASSWORD: "YourStrong!Passw0rd"
+            ACCEPT_EULA: "Y"
+        ports:
+            - "1433:1433"
+        networks:
+            - internal_network
 
 networks:
-  internal_network:
-    driver: bridge
+    internal_network:
+        driver: bridge
