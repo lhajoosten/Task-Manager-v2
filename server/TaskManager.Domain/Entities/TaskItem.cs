@@ -143,15 +143,15 @@ public class TaskItem : BaseEntity, IAggregateRoot
 		return AssignedTo == userId;
 	}
 
-	// Domain Events
-	public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    // Domain Events
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-	public void ClearDomainEvents()
+    public void ClearDomainEvents()
 	{
 		_domainEvents.Clear();
 	}
 
-	private void AddDomainEvent(IDomainEvent domainEvent)
+    public void AddDomainEvent(IDomainEvent domainEvent)
 	{
 		_domainEvents.Add(domainEvent);
 	}
