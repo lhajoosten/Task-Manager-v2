@@ -1,0 +1,166 @@
+<app-page-header
+    title="My Profile"
+    subtitle="View and update your profile information"
+></app-page-header>
+
+<app-alert
+    *ngIf="error()"
+    type="danger"
+    [message]="error()!"
+    (close)="error.set(null)"
+></app-alert>
+
+<app-alert
+    *ngIf="success()"
+    type="success"
+    [message]="success()!"
+    (close)="success.set(null)"
+></app-alert>
+
+<div class="profile-container">
+    <ng-container *ngIf="isLoading()">
+        <app-loading-spinner></app-loading-spinner>
+    </ng-container>
+
+    <div *ngIf="!isLoading() && user()" class="profile-content">
+        <div class="profile-header">
+            <div class="user-avatar">
+                <div class="avatar-circle">
+                    {{ user()!.firstName.charAt(0)
+                    }}{{ user()!.lastName.charAt(0) }}
+                </div>
+            </div>
+            <div class="user-info">
+                <h2 class="user-name">{{ user()!.fullName }}</h2>
+                <p class="user-email">{{ user()!.email }}</p>
+                <p class="user-since">
+                    Member since:
+                    {{ user()!.createdAt | dateTimeFormat: "mediumDate" }}
+                </p>
+            </div>
+        </div>
+
+        <div class="profile-form-container">
+            <h3 class="section-title">Edit Profile</h3>
+            <form
+                [formGroup]="profileForm"
+                (ngSubmit)="onSubmit()"
+                class="profile-form"
+            >
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        formControlName="firstName"
+                        class="form-control"
+                        [ngClass]="{
+                            'is-invalid':
+                                profileForm.controls['firstName'].touched &&
+                                profileForm.controls['firstName'].invalid,
+                        }"
+                    />
+                    <div
+                        *ngIf="
+                            profileForm.controls['firstName'].touched &&
+                            profileForm.controls['firstName'].invalid
+                        "
+                        class="error-message"
+                    >
+                        <span
+                            *ngIf="
+                                profileForm.controls['firstName'].errors?.[
+                                    'required'
+                                ]
+                            "
+                            >First name is required</span
+                        >
+                        <span
+                            *ngIf="
+                                profileForm.controls['firstName'].errors?.[
+                                    'maxlength'
+                                ]
+                            "
+                            >First name must not exceed 100 characters</span
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        formControlName="lastName"
+                        class="form-control"
+                        [ngClass]="{
+                            'is-invalid':
+                                profileForm.controls['lastName'].touched &&
+                                profileForm.controls['lastName'].invalid,
+                        }"
+                    />
+                    <div
+                        *ngIf="
+                            profileForm.controls['lastName'].touched &&
+                            profileForm.controls['lastName'].invalid
+                        "
+                        class="error-message"
+                    >
+                        <span
+                            *ngIf="
+                                profileForm.controls['lastName'].errors?.[
+                                    'required'
+                                ]
+                            "
+                            >Last name is required</span
+                        >
+                        <span
+                            *ngIf="
+                                profileForm.controls['lastName'].errors?.[
+                                    'maxlength'
+                                ]
+                            "
+                            >Last name must not exceed 100 characters</span
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        formControlName="email"
+                        class="form-control"
+                        [disabled]="profileForm.controls['email'].disabled"
+                    />
+                    <small class="form-text text-muted"
+                        >Email cannot be changed</small
+                    >
+                </div>
+
+                <div class="form-actions">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        [disabled]="profileForm.invalid || isSaving()"
+                    >
+                        <span
+                            *ngIf="isSaving()"
+                            class="spinner-border spinner-border-sm me-1"
+                        ></span>
+                        Save Changes
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        (click)="navigateToChangePassword()"
+                    >
+                        Change Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+<div class="spinner-container" [ngClass]="{ 'full-page': fullPage }">
+    <div class="spinner" [ngClass]="'spinner-' + size"></div>
+    @if (message) {
+        <p class="spinner-message">{{ message }}</p>
+    }
+</div>

@@ -1,0 +1,179 @@
+<ng-container *ngIf="isLoading()">
+    <app-loading-spinner></app-loading-spinner>
+</ng-container>
+
+<ng-container *ngIf="!isLoading() && error()">
+    <app-alert
+        type="danger"
+        [message]="error()!"
+        (close)="error.set(null)"
+    ></app-alert>
+
+    <div class="error-actions">
+        <a routerLink="/tasks" class="btn btn-primary">Back to Tasks</a>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoading() && !error() && task()">
+    <app-page-header
+        [title]="task()!.title"
+        [subtitle]="'Task Details'"
+        buttonText="Back to Tasks"
+        buttonLink="/tasks"
+        buttonIcon="fas fa-arrow-left"
+    ></app-page-header>
+
+    <div class="task-detail-container">
+        <div class="task-info">
+            <div class="task-badges">
+                <span
+                    class="task-badge status-badge"
+                    [ngClass]="'status-' + task()!.status"
+                >
+                    {{ task()!.status | taskStatus }}
+                </span>
+                <span
+                    class="task-badge priority-badge"
+                    [ngClass]="'priority-' + task()!.priority"
+                >
+                    {{ task()!.priority | taskPriority }}
+                </span>
+                <span
+                    *ngIf="task()!.isOverdue"
+                    class="task-badge overdue-badge"
+                >
+                    Overdue
+                </span>
+            </div>
+
+            <div class="detail-section">
+                <h3 class="section-title">Description</h3>
+                <p class="task-description">
+                    {{ task()!.description || "No description provided." }}
+                </p>
+            </div>
+
+            <div class="detail-section">
+                <h3 class="section-title">Details</h3>
+
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Due Date</span>
+                        <span class="detail-value">
+                            {{
+                                task()!.dueDate
+                                    ? (task()!.dueDate!
+                                      | dateTimeFormat: "medium")
+                                    : "No due date"
+                            }}
+                        </span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">{{
+                            task()!.createdAt | dateTimeFormat: "medium"
+                        }}</span>
+                    </div>
+
+                    <div class="detail-item" *ngIf="task()!.updatedAt">
+                        <span class="detail-label">Last Updated</span>
+                        <span class="detail-value">{{
+                            task()!.updatedAt || null | dateTimeFormat: "medium"
+                        }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span
+                            class="detail-value status-text"
+                            [ngClass]="'status-text-' + task()!.status"
+                        >
+                            {{ task()!.status | taskStatus }}
+                        </span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Priority</span>
+                        <span
+                            class="detail-value priority-text"
+                            [ngClass]="'priority-text-' + task()!.priority"
+                        >
+                            {{ task()!.priority | taskPriority }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="task-actions">
+            <div class="action-section">
+                <h3 class="section-title">Change Status</h3>
+                <div class="status-buttons">
+                    <button
+                        *ngIf="
+                            task()!.status !== 1 &&
+                            task()!.status !== 3 &&
+                            task()!.status !== 4
+                        "
+                        class="btn btn-outline-secondary"
+                        (click)="changeStatus(1)"
+                    >
+                        Mark as To Do
+                    </button>
+                    <button
+                        *ngIf="
+                            task()!.status !== 2 &&
+                            task()!.status !== 3 &&
+                            task()!.status !== 4
+                        "
+                        class="btn btn-outline-info"
+                        (click)="changeStatus(2)"
+                    >
+                        Mark as In Progress
+                    </button>
+                    <button
+                        *ngIf="task()!.status !== 3 && task()!.status !== 4"
+                        class="btn btn-success"
+                        (click)="changeStatus(3)"
+                    >
+                        Mark as Completed
+                    </button>
+                    <button
+                        *ngIf="task()!.status !== 4 && task()!.status !== 3"
+                        class="btn btn-outline-danger"
+                        (click)="changeStatus(4)"
+                    >
+                        Mark as Cancelled
+                    </button>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3 class="section-title">Task Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" (click)="editTask()">
+                        Edit Task
+                    </button>
+                    <button class="btn btn-danger" (click)="confirmDelete()">
+                        Delete Task
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<app-confirm-dialog
+    [isOpen]="showDeleteConfirm()"
+    title="Delete Task"
+    [message]="
+        'Are you sure you want to delete the task: ' +
+        (task()?.title || '') +
+        '?'
+    "
+    confirmButtonText="Delete"
+    confirmButtonClass="btn-danger"
+    (confirm)="onDeleteConfirm()"
+    (cancel)="onDeleteCancel()"
+></app-confirm-dialog>

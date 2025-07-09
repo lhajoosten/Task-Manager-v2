@@ -1,0 +1,268 @@
+.task-detail-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.task-info {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.task-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.task-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+.status-badge {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.status-1 {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.status-2 {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.status-3 {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-4 {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.priority-badge {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.priority-1 {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.priority-2 {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.priority-3 {
+    background-color: #ffe5d0;
+    color: #7f2704;
+}
+
+.priority-4 {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.overdue-badge {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.detail-section {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: #212529;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.task-description {
+    margin: 0;
+    line-height: 1.6;
+    color: #495057;
+    white-space: pre-line;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    font-size: 1rem;
+    color: #212529;
+}
+
+.status-text-1 {
+    color: #495057;
+}
+
+.status-text-2 {
+    color: #055160;
+}
+
+.status-text-3 {
+    color: #0f5132;
+}
+
+.status-text-4 {
+    color: #842029;
+}
+
+.priority-text-1 {
+    color: #495057;
+}
+
+.priority-text-2 {
+    color: #664d03;
+}
+
+.priority-text-3 {
+    color: #7f2704;
+}
+
+.priority-text-4 {
+    color: #842029;
+}
+
+.task-actions {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.action-section {
+    margin-bottom: 20px;
+}
+
+.action-section:last-child {
+    margin-bottom: 0;
+}
+
+.status-buttons,
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline-secondary {
+    background-color: transparent;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-outline-info {
+    background-color: transparent;
+    border: 1px solid #0dcaf0;
+    color: #0dcaf0;
+}
+
+.btn-outline-info:hover {
+    background-color: #0dcaf0;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-success {
+    background-color: #198754;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+}
+
+.error-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 576px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-buttons,
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

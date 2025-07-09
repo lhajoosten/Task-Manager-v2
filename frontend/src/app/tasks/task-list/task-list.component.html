@@ -1,0 +1,121 @@
+<app-page-header
+    title="Tasks"
+    subtitle="Manage your tasks"
+    buttonText="Create New Task"
+    buttonLink="/tasks/new"
+    buttonIcon="fas fa-plus"
+></app-page-header>
+
+<app-alert
+    *ngIf="error()"
+    type="danger"
+    [message]="error()!"
+    (close)="error.set(null)"
+></app-alert>
+
+<div class="task-filters">
+    <form [formGroup]="filterForm" class="filter-form">
+        <div class="filter-row">
+            <div class="search-box">
+                <input
+                    type="text"
+                    formControlName="search"
+                    placeholder="Search tasks..."
+                    class="form-control"
+                />
+            </div>
+
+            <div class="filter-group">
+                <select formControlName="status" class="form-control">
+                    <option [value]="null">All Statuses</option>
+                    <option
+                        *ngFor="let option of statusOptions"
+                        [value]="option.id"
+                    >
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <select formControlName="priority" class="form-control">
+                    <option [value]="null">All Priorities</option>
+                    <option
+                        *ngFor="let option of priorityOptions"
+                        [value]="option.id"
+                    >
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group checkbox-group">
+                <label>
+                    <input type="checkbox" formControlName="onlyOverdue" />
+                    <span>Overdue</span>
+                </label>
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="clearFilters()"
+            >
+                Clear Filters
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="task-list-container">
+    <app-loading-spinner *ngIf="isLoading()"></app-loading-spinner>
+
+    <div *ngIf="!isLoading() && tasks().length === 0" class="no-tasks">
+        <p>No tasks found. Create a new task or adjust your filters.</p>
+        <a routerLink="/tasks/new" class="btn btn-primary">Create Task</a>
+    </div>
+
+    <div *ngIf="!isLoading() && tasks().length > 0" class="task-list">
+        <app-task-item
+            *ngFor="let task of tasks()"
+            [task]="task"
+            (delete)="confirmDelete($event)"
+        ></app-task-item>
+
+        <div class="pagination" *ngIf="totalPages() > 1">
+            <button
+                class="pagination-btn"
+                [disabled]="currentPage() === 1"
+                (click)="onPageChange(currentPage() - 1)"
+            >
+                Previous
+            </button>
+
+            <span class="pagination-info">
+                Page {{ currentPage() }} of {{ totalPages() }}
+            </span>
+
+            <button
+                class="pagination-btn"
+                [disabled]="currentPage() === totalPages()"
+                (click)="onPageChange(currentPage() + 1)"
+            >
+                Next
+            </button>
+        </div>
+    </div>
+</div>
+
+<app-confirm-dialog
+    [isOpen]="showDeleteConfirm()"
+    title="Delete Task"
+    [message]="
+        'Are you sure you want to delete the task: ' +
+        (taskToDelete()?.title || '') +
+        '?'
+    "
+    confirmButtonText="Delete"
+    confirmButtonClass="btn-danger"
+    (confirm)="onDeleteConfirm()"
+    (cancel)="onDeleteCancel()"
+></app-confirm-dialog>

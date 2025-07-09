@@ -1,0 +1,239 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Register</h2>
+
+        <form
+            [formGroup]="registerForm"
+            (ngSubmit)="onSubmit()"
+            class="auth-form"
+        >
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        formControlName="firstName"
+                        class="form-control"
+                        placeholder="Enter your first name"
+                        [ngClass]="{
+                            'is-invalid':
+                                registerForm.controls['firstName'].touched &&
+                                registerForm.controls['firstName'].invalid,
+                        }"
+                    />
+                    @if (
+                        registerForm.controls["firstName"].touched &&
+                        registerForm.controls["firstName"].invalid
+                    ) {
+                        <div class="error-message">
+                            @if (
+                                registerForm.controls["firstName"].errors?.[
+                                    "required"
+                                ]
+                            ) {
+                                <span>First name is required</span>
+                            }
+                            @if (
+                                registerForm.controls["firstName"].errors?.[
+                                    "maxlength"
+                                ]
+                            ) {
+                                <span
+                                    >First name must not exceed 100
+                                    characters</span
+                                >
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        formControlName="lastName"
+                        class="form-control"
+                        placeholder="Enter your last name"
+                        [ngClass]="{
+                            'is-invalid':
+                                registerForm.controls['lastName'].touched &&
+                                registerForm.controls['lastName'].invalid,
+                        }"
+                    />
+                    @if (
+                        registerForm.controls["lastName"].touched &&
+                        registerForm.controls["lastName"].invalid
+                    ) {
+                        <div class="error-message">
+                            @if (
+                                registerForm.controls["lastName"].errors?.[
+                                    "required"
+                                ]
+                            ) {
+                                <span>Last name is required</span>
+                            }
+                            @if (
+                                registerForm.controls["lastName"].errors?.[
+                                    "maxlength"
+                                ]
+                            ) {
+                                <span
+                                    >Last name must not exceed 100
+                                    characters</span
+                                >
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    [ngClass]="{
+                        'is-invalid':
+                            registerForm.controls['email'].touched &&
+                            registerForm.controls['email'].invalid,
+                    }"
+                />
+                @if (
+                    registerForm.controls["email"].touched &&
+                    registerForm.controls["email"].invalid
+                ) {
+                    <div class="error-message">
+                        @if (
+                            registerForm.controls["email"].errors?.["required"]
+                        ) {
+                            <span>Email is required</span>
+                        }
+                        @if (registerForm.controls["email"].errors?.["email"]) {
+                            <span>Please enter a valid email</span>
+                        }
+                        @if (
+                            registerForm.controls["email"].errors?.["maxlength"]
+                        ) {
+                            <span>Email must not exceed 255 characters</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    [ngClass]="{
+                        'is-invalid':
+                            registerForm.controls['password'].touched &&
+                            registerForm.controls['password'].invalid,
+                    }"
+                />
+                @if (
+                    registerForm.controls["password"].touched &&
+                    registerForm.controls["password"].invalid
+                ) {
+                    <div class="error-message">
+                        @if (
+                            registerForm.controls["password"].errors?.[
+                                "required"
+                            ]
+                        ) {
+                            <span>Password is required</span>
+                        }
+                        @if (
+                            registerForm.controls["password"].errors?.[
+                                "minlength"
+                            ]
+                        ) {
+                            <span>Password must be at least 8 characters</span>
+                        }
+                        @if (
+                            registerForm.controls["password"].errors?.[
+                                "pattern"
+                            ]
+                        ) {
+                            <span
+                                >Password must contain at least one lowercase
+                                letter, one uppercase letter, and one
+                                number</span
+                            >
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    formControlName="confirmPassword"
+                    class="form-control"
+                    placeholder="Confirm your password"
+                    [ngClass]="{
+                        'is-invalid':
+                            registerForm.controls['confirmPassword'].touched &&
+                            registerForm.controls['confirmPassword'].invalid,
+                    }"
+                />
+                @if (
+                    registerForm.controls["confirmPassword"].touched &&
+                    registerForm.controls["confirmPassword"].invalid
+                ) {
+                    <div class="error-message">
+                        @if (
+                            registerForm.controls["confirmPassword"].errors?.[
+                                "required"
+                            ]
+                        ) {
+                            <span>Confirm Password is required</span>
+                        }
+                        @if (
+                            registerForm.controls["confirmPassword"].errors?.[
+                                "mustMatch"
+                            ]
+                        ) {
+                            <span>Passwords must match</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            @if (errorMessage) {
+                <div class="alert alert-danger">
+                    {{ errorMessage }}
+                </div>
+            }
+
+            <div class="form-actions">
+                <button
+                    type="submit"
+                    [disabled]="registerForm.invalid || loading"
+                    class="btn btn-primary"
+                >
+                    @if (loading) {
+                        <span
+                            class="spinner-border spinner-border-sm me-1"
+                        ></span>
+                    }
+                    Register
+                </button>
+            </div>
+
+            <div class="auth-links">
+                <p>Already have an account? <a routerLink="/login">Login</a></p>
+            </div>
+        </form>
+    </div>
+</div>

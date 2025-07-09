@@ -1,0 +1,116 @@
+<div
+    class="task-item"
+    [ngClass]="{
+        'task-overdue': task.isOverdue,
+        'task-completed': task.status === 3,
+        'task-cancelled': task.status === 4,
+    }"
+>
+    <div class="task-header">
+        <h3
+            class="task-title"
+            (click)="viewDetails()"
+            (keydown)="viewDetails()"
+            tabindex="-1"
+        >
+            {{ task.title }}
+        </h3>
+        <div class="task-badges">
+            <span
+                class="task-badge status-badge"
+                [ngClass]="'status-' + task.status"
+            >
+                {{ task.status | taskStatus }}
+            </span>
+            <span
+                class="task-badge priority-badge"
+                [ngClass]="'priority-' + task.priority"
+            >
+                {{ task.priority | taskPriority }}
+            </span>
+            <span *ngIf="task.isOverdue" class="task-badge overdue-badge">
+                Overdue
+            </span>
+        </div>
+    </div>
+
+    <div class="task-body">
+        <p class="task-description">
+            {{ task.description | slice: 0 : 150
+            }}{{ task.description.length > 150 ? "..." : "" }}
+        </p>
+
+        <div class="task-meta">
+            <div *ngIf="task.dueDate" class="meta-item">
+                <span class="meta-label">Due:</span>
+                <span class="meta-value">{{
+                    task.dueDate | dateTimeFormat: "mediumDate"
+                }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Created:</span>
+                <span class="meta-value">{{
+                    task.createdAt | dateTimeFormat: "mediumDate"
+                }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="task-actions">
+        <div class="status-actions">
+            <button
+                *ngIf="
+                    task.status !== 1 && task.status !== 3 && task.status !== 4
+                "
+                class="btn btn-sm btn-outline"
+                (click)="markTodo()"
+                title="Mark as To Do"
+            >
+                To Do
+            </button>
+            <button
+                *ngIf="
+                    task.status !== 2 && task.status !== 3 && task.status !== 4
+                "
+                class="btn btn-sm btn-outline"
+                (click)="markInProgress()"
+                title="Mark as In Progress"
+            >
+                In Progress
+            </button>
+            <button
+                *ngIf="task.status !== 3 && task.status !== 4"
+                class="btn btn-sm btn-success"
+                (click)="markComplete()"
+                title="Mark as Completed"
+            >
+                Complete
+            </button>
+            <button
+                *ngIf="task.status !== 4 && task.status !== 3"
+                class="btn btn-sm btn-outline"
+                (click)="markCancelled()"
+                title="Mark as Cancelled"
+            >
+                Cancel
+            </button>
+        </div>
+
+        <div class="item-actions">
+            <button
+                class="btn btn-sm btn-primary"
+                (click)="editTask()"
+                title="Edit Task"
+            >
+                Edit
+            </button>
+            <button
+                class="btn btn-sm btn-danger"
+                (click)="onDelete()"
+                title="Delete Task"
+            >
+                Delete
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+@if (message) {
+    <div class="alert" [ngClass]="'alert-' + type" role="alert">
+        <span [innerHTML]="message"></span>
+        @if (dismissible) {
+            <button
+                type="button"
+                class="close-button"
+                aria-label="Close"
+                (click)="onClose()"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+        }
+    </div>
+}
