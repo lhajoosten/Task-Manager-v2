@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using TaskManager.Api.Models;
+using TaskManager.Api.Models.Tasks;
 using TaskManager.Application.Common.Models;
 using TaskManager.Application.Tasks;
 using TaskManager.Application.Tasks.Commands.ChangeTaskStatus;

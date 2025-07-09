@@ -1,6 +1,6 @@
 using TaskManager.Domain.Entities;
 
-namespace TaskManager.Domain.Events;
+namespace TaskManager.Domain.Events.Tasks;
 
 public class TaskDeletedEvent : IDomainEvent
 {

@@ -1,7 +1,7 @@
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.Enums;
 
-namespace TaskManager.Domain.Events;
+namespace TaskManager.Domain.Events.Tasks;
 
 public class TaskStatusChangedEvent : IDomainEvent
 {

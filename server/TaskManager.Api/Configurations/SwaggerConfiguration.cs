@@ -1,7 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 
-namespace TaskManager.Api.Configuration;
+namespace TaskManager.Api.Configurations;
 
 public static class SwaggerConfiguration
 {

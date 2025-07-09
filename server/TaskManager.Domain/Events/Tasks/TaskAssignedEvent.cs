@@ -1,7 +1,7 @@
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.ValueObjects;
 
-namespace TaskManager.Domain.Events;
+namespace TaskManager.Domain.Events.Tasks;
 
 public class TaskAssignedEvent : IDomainEvent
 {

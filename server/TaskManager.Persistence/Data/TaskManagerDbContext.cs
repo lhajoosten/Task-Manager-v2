@@ -9,19 +9,21 @@ namespace TaskManager.Persistence.Data;
 
 public class TaskManagerDbContext : DbContext, IApplicationDbContext
 {
-	private readonly IMediator _mediator;
+	private readonly IMediator? _mediator;
 
 	public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options)
-	: base(options)
+		: base(options)
 	{
 	}
 
-	public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options, IMediator mediator) : base(options)
+	public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options, IMediator mediator)
+		: base(options)
 	{
 		_mediator = mediator;
 	}
 
 	public DbSet<TaskItem> Tasks => Set<TaskItem>();
+	public DbSet<User> Users => Set<User>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -35,7 +37,10 @@ public class TaskManagerDbContext : DbContext, IApplicationDbContext
 		UpdateTimestamps();
 
 		// Dispatch domain events
-		await DispatchDomainEvents();
+		if (_mediator != null)
+		{
+			await DispatchDomainEvents();
+		}
 
 		return await base.SaveChangesAsync(cancellationToken);
 	}
@@ -64,9 +69,12 @@ public class TaskManagerDbContext : DbContext, IApplicationDbContext
 
 		aggregateRoots.ForEach(x => x.ClearDomainEvents());
 
-		foreach (var domainEvent in domainEvents)
+		if (_mediator != null)
 		{
-			await _mediator.Publish(domainEvent);
+			foreach (var domainEvent in domainEvents)
+			{
+				await _mediator.Publish(domainEvent);
+			}
 		}
 	}
 }

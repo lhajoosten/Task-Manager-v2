@@ -2,6 +2,7 @@ using Ardalis.GuardClauses;
 using TaskManager.Domain.Common;
 using TaskManager.Domain.Enums;
 using TaskManager.Domain.Events;
+using TaskManager.Domain.Events.Tasks;
 using TaskManager.Domain.ValueObjects;
 
 namespace TaskManager.Domain.Entities;
@@ -15,22 +16,34 @@ public class TaskItem : BaseEntity, IAggregateRoot
 	public DateTime? DueDate { get; private set; }
 	public TaskStatusType Status { get; private set; } = TaskStatusType.Todo;
 	public TaskPriorityType Priority { get; private set; } = TaskPriorityType.Normal;
-	public UserId AssignedTo { get; private set; } = null!;
+
+	// Foreign key to User
+	public Guid AssignedToId { get; private set; }
+
+	// Navigation property
+	public virtual User AssignedTo { get; private set; } = null!;
+
 	public bool IsDeleted { get; private set; }
 
 	// For EF Core
 	private TaskItem() { }
 
-	public TaskItem(string title, string description, UserId assignedTo, DateTime? dueDate = null, TaskPriorityType priority = TaskPriorityType.Normal)
+	public TaskItem(string title, string description, Guid assignedToId, DateTime? dueDate = null, TaskPriorityType priority = TaskPriorityType.Normal)
 	{
 		Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
 		Description = Guard.Against.Null(description, nameof(description));
-		AssignedTo = Guard.Against.Null(assignedTo, nameof(assignedTo));
+		AssignedToId = Guard.Against.Default(assignedToId, nameof(assignedToId));
 		DueDate = dueDate;
 		Priority = priority;
 		Status = TaskStatusType.Todo;
 
 		AddDomainEvent(new TaskCreatedEvent(this));
+	}
+
+	// Overload that accepts UserId for backward compatibility
+	public TaskItem(string title, string description, UserId assignedTo, DateTime? dueDate = null, TaskPriorityType priority = TaskPriorityType.Normal)
+		: this(title, description, assignedTo.Value, dueDate, priority)
+	{
 	}
 
 	public void UpdateDetails(string title, string description, DateTime? dueDate = null, TaskPriorityType? priority = null)
@@ -110,17 +123,23 @@ public class TaskItem : BaseEntity, IAggregateRoot
 		}
 	}
 
+	public void AssignTo(Guid userId)
+	{
+		Guard.Against.Default(userId, nameof(userId));
+
+		if (AssignedToId != userId)
+		{
+			var previousUserId = AssignedToId;
+			AssignedToId = userId;
+			UpdateTimestamp();
+			AddDomainEvent(new TaskAssignedEvent(this, UserId.From(previousUserId), UserId.From(userId)));
+		}
+	}
+
+	// Overload that accepts UserId for backward compatibility
 	public void AssignTo(UserId userId)
 	{
-		Guard.Against.Null(userId, nameof(userId));
-
-		if (AssignedTo != userId)
-		{
-			var previousUserId = AssignedTo;
-			AssignedTo = userId;
-			UpdateTimestamp();
-			AddDomainEvent(new TaskAssignedEvent(this, previousUserId, userId));
-		}
+		AssignTo(userId.Value);
 	}
 
 	public void Delete()
@@ -138,20 +157,32 @@ public class TaskItem : BaseEntity, IAggregateRoot
 		return DueDate.HasValue && DueDate.Value.Date < DateTime.UtcNow.Date && Status != TaskStatusType.Completed;
 	}
 
-	public bool IsAssignedTo(UserId userId)
+	public bool IsAssignedTo(Guid userId)
 	{
-		return AssignedTo == userId;
+		return AssignedToId == userId;
 	}
 
-    // Domain Events
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+	// Overload that accepts UserId for backward compatibility
+	public bool IsAssignedTo(UserId userId)
+	{
+		return AssignedToId == userId.Value;
+	}
 
-    public void ClearDomainEvents()
+	// Helper method to get UserId for backward compatibility
+	public UserId GetAssignedUserId()
+	{
+		return UserId.From(AssignedToId);
+	}
+
+	// Domain Events
+	public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+	public void ClearDomainEvents()
 	{
 		_domainEvents.Clear();
 	}
 
-    public void AddDomainEvent(IDomainEvent domainEvent)
+	public void AddDomainEvent(IDomainEvent domainEvent)
 	{
 		_domainEvents.Add(domainEvent);
 	}

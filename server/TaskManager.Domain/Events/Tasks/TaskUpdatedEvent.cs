@@ -1,7 +1,9 @@
 // TaskManager.Domain/Events/TaskCreatedEvent.cs
+
+// TaskManager.Domain/Events/TaskCreatedEvent.cs
 using TaskManager.Domain.Entities;
 
-namespace TaskManager.Domain.Events;
+namespace TaskManager.Domain.Events.Tasks;
 
 public class TaskUpdatedEvent : IDomainEvent
 {
