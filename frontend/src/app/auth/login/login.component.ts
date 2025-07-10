@@ -2,20 +2,19 @@ import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../shared/shared.module';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, SharedModule],
   standalone: true,
 })
 export class LoginComponent {
@@ -30,7 +29,6 @@ export class LoginComponent {
   private readonly route = inject(ActivatedRoute);
 
   constructor() {
-    // Redirect if already logged in
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
@@ -40,7 +38,6 @@ export class LoginComponent {
       password: ['', Validators.required],
     });
 
-    // Get return URL from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 

@@ -26,10 +26,10 @@ export class TaskService {
       .set('pageSize', pageSize.toString())
       .set('onlyOverdue', onlyOverdue.toString());
 
-    if (status !== undefined) {
+    if (status !== undefined && status !== null) {
       params = params.set('status', status.toString());
     }
-    if (priority !== undefined) {
+    if (priority !== undefined && priority !== null) {
       params = params.set('priority', priority.toString());
     }
     if (search) {

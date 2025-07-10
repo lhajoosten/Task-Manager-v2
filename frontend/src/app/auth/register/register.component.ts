@@ -2,26 +2,25 @@ import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../shared/shared.module';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, SharedModule],
   standalone: true,
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
-  loading = false;
-  errorMessage = '';
+  protected registerForm: FormGroup;
+  protected loading = false;
+  protected errorMessage = '';
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);

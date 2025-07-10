@@ -5,7 +5,7 @@
     </p>
 
     <div class="home-cta">
-        <a routerLink="/register" class="btn-cta">Get Started Now</a>
+        <a [routerLink]="['/auth/register']" routerLinkActive="router-link-active" class="btn-cta">Get Started Now</a>
     </div>
 
     <div class="home-features">
@@ -35,10 +35,5 @@
                 design.
             </p>
         </div>
-    </div>
-
-    <div class="home-cta">
-        <p class="mb-3">Already have an account?</p>
-        <a routerLink="/login" class="btn-cta">Login Now</a>
     </div>
 </div>

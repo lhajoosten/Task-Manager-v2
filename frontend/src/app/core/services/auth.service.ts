@@ -18,8 +18,8 @@ export class AuthService {
   private readonly router = inject(Router);
 
   // Use signals for reactive state management
-  currentUser = signal<User | null>(null);
-  isAuthenticated = signal<boolean>(false);
+  public currentUser = signal<User | null>(null);
+  public isAuthenticated = signal<boolean>(false);
 
   constructor() {
     this.checkAuthStatus();

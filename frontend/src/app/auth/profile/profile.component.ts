@@ -5,8 +5,8 @@ import {
   FormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
-import { User } from '../../../core/models/user.model';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared/shared.module';

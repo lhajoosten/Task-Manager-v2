@@ -1,7 +1,7 @@
 <header class="app-header">
     <div class="header-container">
         <div class="logo-container">
-            <a routerLink="/" class="logo"> TaskManager </a>
+            <a [routerLink]="['/']" class="logo"> TaskManager </a>
         </div>
 
         <button
@@ -16,16 +16,16 @@
             @if (authService.isLoggedIn()) {
                 <div class="nav-items">
                     <a
-                        routerLink="/tasks"
-                        routerLinkActive="active"
+                        [routerLink]="['/tasks']"
+                        [routerLinkActive]="['active']"
                         class="nav-item"
                         (click)="closeMenu()"
                     >
                         Tasks
                     </a>
                     <a
-                        routerLink="/profile"
-                        routerLinkActive="active"
+                        [routerLink]="['/profile']"
+                        [routerLinkActive]="['active']"
                         class="nav-item"
                         (click)="closeMenu()"
                     >
@@ -60,16 +60,16 @@
             } @else {
                 <div class="nav-items">
                     <a
-                        routerLink="/login"
-                        routerLinkActive="active"
+                        [routerLink]="['/auth/login']"
+                        [routerLinkActive]="['active']"
                         class="nav-item"
                         (click)="closeMenu()"
                     >
                         Login
                     </a>
                     <a
-                        routerLink="/register"
-                        routerLinkActive="active"
+                        [routerLink]="['/auth/register']"
+                        [routerLinkActive]="['active']"
                         class="nav-item"
                         (click)="closeMenu()"
                     >

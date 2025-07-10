@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared/shared.module';
 

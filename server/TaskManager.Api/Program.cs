@@ -1,6 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+
 using TaskManager.Api.Configurations;
 using TaskManager.Api.Extensions;
 using TaskManager.Api.Middleware;
@@ -38,29 +40,30 @@ public class Program
 
     private static void ConfigureSSL(WebApplicationBuilder builder)
     {
-        X509Certificate2 certificate;
-        try
-        {
-            var certificatePath = Environment.GetEnvironmentVariable("CERTIFICATE_PATH");
-            var certificateKeyPath = Environment.GetEnvironmentVariable("CERTIFICATE_KEYPATH");
+        var certificatePath = Environment.GetEnvironmentVariable("CERTIFICATE_PATH");
+        var certificateKeyPath = Environment.GetEnvironmentVariable("CERTIFICATE_KEYPATH");
 
-            if (string.IsNullOrEmpty(certificatePath) || string.IsNullOrEmpty(certificateKeyPath))
+        if (!string.IsNullOrEmpty(certificatePath) && !string.IsNullOrEmpty(certificateKeyPath))
+        {
+            // Running in Docker: use provided certs
+            var certificate = X509Certificate2.CreateFromPemFile(certificatePath, certificateKeyPath);
+            builder.WebHost.ConfigureKestrel(options =>
             {
-                throw new InvalidOperationException("Certificate paths are not set in environment variables.");
-            }
-
-            certificate = X509Certificate2.CreateFromPemFile(certificatePath, certificateKeyPath);
+                options.ListenAnyIP(5443, listenOptions => listenOptions.UseHttps(certificate));
+                options.ListenAnyIP(8080);
+            });
         }
-        catch (Exception ex)
+        else
         {
-            throw new Exception("Failed to load certificate from PEM files.", ex);
+            // Local dev: let Kestrel use its default (dev cert, launchSettings, etc.)
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                // HTTPS will be handled by launchSettings.json or dev cert
+                // Use default HTTPS port (5443) and HTTP port (8080)
+                options.ListenAnyIP(5443, listenOptions => listenOptions.UseHttps());
+                options.ListenAnyIP(8080);
+            });
         }
-
-        builder.WebHost.ConfigureKestrel(options =>
-        {
-            options.ListenAnyIP(8443, listenOptions => listenOptions.UseHttps(certificate));
-            options.ListenAnyIP(8080);
-        });
     }
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
@@ -89,10 +92,10 @@ public class Program
         {
             options.AddPolicy("DefaultPolicy", builder =>
             {
-                builder.WithOrigins("https://localhost:6443", "http://localhost:6000", "http://localhost:4200")
-                       .AllowAnyHeader()
-                       .AllowAnyMethod()
-                       .AllowCredentials();
+                builder.WithOrigins("https://localhost:6443")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
 

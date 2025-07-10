@@ -13,7 +13,7 @@ export const routes: Routes = [
           import('./home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: '',
+        path: 'auth',
         loadChildren: () =>
           import('./auth/auth.module').then((m) => m.AuthModule),
       },
