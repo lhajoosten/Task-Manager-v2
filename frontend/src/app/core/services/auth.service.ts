@@ -1,8 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { User } from '../models/user.model';
 import { AuthResponse } from '../models/auth-response.model';
@@ -17,12 +17,14 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
-  // Use signals for reactive state management
   public currentUser = signal<User | null>(null);
   public isAuthenticated = signal<boolean>(false);
+  public isLoading = signal<boolean>(false);
+  public isInitialized = signal<boolean>(false);
 
   constructor() {
-    this.checkAuthStatus();
+    this.initializeAuth();
+    this.setupLogoutListener();
   }
 
   register(
@@ -77,7 +79,8 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
     this.currentUser.set(null);
     this.isAuthenticated.set(false);
-    this.router.navigate(['/login']);
+    this.isLoading.set(false);
+    this.router.navigate(['/auth/login']);
   }
 
   getToken(): string | null {
@@ -106,10 +109,6 @@ export class AuthService {
           }
           this.currentUser.set(response.value);
           return response.value;
-        }),
-        catchError((error) => {
-          this.logout();
-          return throwError(() => error);
         }),
       );
   }
@@ -142,15 +141,66 @@ export class AuthService {
     localStorage.setItem(this.tokenKey, authResult.accessToken);
     this.currentUser.set(authResult.user);
     this.isAuthenticated.set(true);
+    this.isLoading.set(false);
+    this.isInitialized.set(true);
   }
 
-  private checkAuthStatus(): void {
+  private initializeAuth(): void {
     const token = this.getToken();
+
     if (token) {
       this.isAuthenticated.set(true);
-      this.getCurrentUser().subscribe({
-        error: () => this.logout(),
-      });
+      this.isLoading.set(true);
+
+      setTimeout(() => {
+        this.loadUserData();
+      }, 0);
+    } else {
+      this.isAuthenticated.set(false);
+      this.isInitialized.set(true);
     }
+  }
+
+  private loadUserData(): void {
+    if (!this.getToken()) {
+      this.isLoading.set(false);
+      this.isInitialized.set(true);
+      return;
+    }
+
+    this.http
+      .get<{
+        isSuccess: boolean;
+        value: User;
+        error?: string;
+      }>(`${this.apiUrl}/me`)
+      .pipe(
+        map((response) => {
+          if (!response.isSuccess) {
+            throw new Error(response.error || 'Failed to get user info');
+          }
+          return response.value;
+        }),
+      )
+      .subscribe({
+        next: (user) => {
+          this.currentUser.set(user);
+        },
+        error: (error) => {
+          console.warn('Unexpected error in loadUserData:', error);
+        },
+        complete: () => {
+          this.isLoading.set(false);
+          this.isInitialized.set(true);
+        },
+      });
+  }
+
+  private setupLogoutListener(): void {
+    window.addEventListener('auth:logout', () => {
+      this.currentUser.set(null);
+      this.isAuthenticated.set(false);
+      this.isLoading.set(false);
+    });
   }
 }

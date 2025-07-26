@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 
@@ -14,8 +14,10 @@ export class HomeComponent {
   private readonly router = inject(Router);
 
   constructor() {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/tasks']);
-    }
+    effect(() => {
+      if (this.authService.isInitialized() && this.authService.isLoggedIn()) {
+        this.router.navigate(['/tasks']);
+      }
+    });
   }
 }
